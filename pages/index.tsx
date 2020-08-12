@@ -1,12 +1,24 @@
 import Login from './login'
 
-const Index = () => {
-    return (
-        <div>
-            <h1>Test</h1>
-            <Login></Login>
-        </div>
-    )
-}
+/** @format */
+interface IProps {}
+
+const Index: React.FC<IProps> = () => {
+  return (
+    <div>
+      <div>
+        <input type="checkbox" checked={true} readOnly />
+        <span>eslint & prettier setting</span>
+      </div>
+      <div>
+        <input type="checkbox" checked={true} readOnly />
+        <span>Write readme & add styled-components</span>
+      </div>
+      <div>
+        <Login></Login>
+      </div>
+    </div>
+  );
+};
 
 export default Index;

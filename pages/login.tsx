@@ -11,7 +11,7 @@ const LoginPage:React.FC<IProps> = () => {
         <div>
             <div>
                 <GitHubLogin 
-                    clientId="-"
+                    clientId="88646c7a2d563129879e"
                     onSuccess={onSuccessGithub}
                     buttonText="LOGIN WITH GITHUB"
                     className="git-login"
