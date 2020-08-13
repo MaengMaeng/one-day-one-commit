@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "axios": "0.19.2",
+    "express": "4.17.1",
     "next": "9.5.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
