@@ -1,3 +1,5 @@
+import Login from './login'
+
 /** @format */
 interface IProps {}
 
@@ -11,6 +13,9 @@ const Index: React.FC<IProps> = () => {
       <div>
         <input type="checkbox" checked={true} readOnly />
         <span>Write readme & add styled-components</span>
+      </div>
+      <div>
+        <Login></Login>
       </div>
     </div>
   );
