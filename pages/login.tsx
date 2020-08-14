@@ -1,10 +1,14 @@
 import GitHubLogin from "react-github-login";
+import axios from 'axios';
 
 interface IProps {};
 
 const LoginPage:React.FC<IProps> = () => {
-    const onSuccessGithub = (response:Response) => {
-        console.log(response);
+    const onSuccessGithub = async(response:any) => {
+        const {code} = response;
+        const {data} = await axios.post('/auth', {code});
+
+        console.log(data);
     }
 
     return (
