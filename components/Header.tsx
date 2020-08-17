@@ -38,9 +38,7 @@ const Header: React.FC<IProps> = ({ today, tomorrow }) => {
         {typeof window !== "undefined" ? leftTimeStr : null}
       </div>
       <div className="user-info">
-        <Link href="/auth">
-          <a>로그인</a>
-        </Link>
+        <a href="/auth">로그인</a>
       </div>
     </HeaderContainer>
   );
@@ -58,7 +56,17 @@ const HeaderContainer = styled.header`
   padding: 10px;
   font-size: 18px;
 
-  .logo {
+  .user-info {
+    a {
+      border-radius: 5px;
+      padding: 5px 10px;
+      background-color: ${({ theme }) => theme.colors.btn};
+      color: black;
+      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.btn_hover};
+      }
+    }
   }
 `;
 

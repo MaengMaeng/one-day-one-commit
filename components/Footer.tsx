@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+interface IProps {}
 const Footer: React.FC<IProps> = () => {
   return (
     <FooterContainer>
