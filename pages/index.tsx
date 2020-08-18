@@ -1,13 +1,13 @@
 import BasicLayout from "components/BasicLayout";
 import PageMain from "components/PageMain";
+import { IDefaultProps } from "./_app";
 
 /** @format */
-interface IProps {}
+interface IProps extends IDefaultProps {}
 
-const Index: React.FC<IProps> = (props) => {
-  console.log(props);
+const Index: React.FC<IProps> = ({ isAuthenticated, user }) => {
   return (
-    <BasicLayout>
+    <BasicLayout isAuthenticated={isAuthenticated} user={user}>
       <PageMain />
     </BasicLayout>
   );

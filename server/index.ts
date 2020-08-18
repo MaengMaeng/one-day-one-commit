@@ -30,11 +30,11 @@ app
       saveUninitialized: true,
     };
 
-    server.use(session(sessionConfig));
-
     server.use(cookieParser());
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: true }));
+
+    server.use(session(sessionConfig));
 
     server.use(passport.initialize());
     server.use(passport.session());
@@ -42,7 +42,6 @@ app
     server.use(globalRouter);
 
     server.get("*", (req, res) => {
-      console.log(req.user);
       return handle(req, res);
     });
 

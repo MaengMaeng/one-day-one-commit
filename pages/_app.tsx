@@ -1,8 +1,19 @@
 import * as React from "react";
 import Head from "next/head";
-import type { AppProps } from "next/app";
+import App, { AppProps, AppContext } from "next/app";
 import "styles/reset.css";
 import { ThemeProvider } from "styled-components";
+
+export interface IDefaultProps {
+  isAuthenticated: boolean;
+  user: IUser;
+}
+
+interface IUser {
+  username: string;
+  email: string;
+  avatarUrl: string;
+}
 
 const themes = {
   light: {
@@ -31,5 +42,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+MyApp.getInitialProps = async (appContext: AppContext) => {
+  const appProps = await App.getInitialProps(appContext);
+  const user: IUser = (appContext.ctx.req as any)?.user;
+
+  appProps.pageProps = {
+    isAuthenticated: user ? true : false,
+    user,
+  };
+
+  return { ...appProps };
+};
 
 export default MyApp;

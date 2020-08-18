@@ -1,10 +1,11 @@
 import * as React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import { IDefaultProps } from "pages/_app";
 
-interface IProps {}
+interface IProps extends IDefaultProps {}
 
-const BasicLayout: React.FC<IProps> = ({ children }) => {
+const BasicLayout: React.FC<IProps> = ({ isAuthenticated, user, children }) => {
   const now: Date = new Date();
   const tomorrow: Date = new Date(
     now.getFullYear(),
@@ -17,7 +18,12 @@ const BasicLayout: React.FC<IProps> = ({ children }) => {
 
   return (
     <div id="root">
-      <Header today={now} tomorrow={tomorrow} />
+      <Header
+        today={now}
+        tomorrow={tomorrow}
+        isAuthenticated={isAuthenticated}
+        user={user}
+      />
       {children}
       <Footer />
     </div>
