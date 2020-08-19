@@ -1,23 +1,15 @@
-import Login from './login'
+import BasicLayout from "components/BasicLayout";
+import PageMain from "components/PageMain";
+import { IDefaultProps } from "./_app";
 
 /** @format */
-interface IProps {}
+interface IProps extends IDefaultProps {}
 
-const Index: React.FC<IProps> = () => {
+const Index: React.FC<IProps> = ({ isAuthenticated, user }) => {
   return (
-    <div>
-      <div>
-        <input type="checkbox" checked={true} readOnly />
-        <span>eslint & prettier setting</span>
-      </div>
-      <div>
-        <input type="checkbox" checked={true} readOnly />
-        <span>Write readme & add styled-components</span>
-      </div>
-      <div>
-        <Login></Login>
-      </div>
-    </div>
+    <BasicLayout isAuthenticated={isAuthenticated} user={user}>
+      <PageMain />
+    </BasicLayout>
   );
 };
 
