@@ -5,8 +5,8 @@ import "styles/reset.css";
 import { ThemeProvider } from "styled-components";
 
 export interface IDefaultProps {
-  isAuthenticated: boolean;
-  user: IUser;
+  isAuthenticated?: boolean;
+  user?: IUser;
 }
 
 interface IUser {
@@ -47,9 +47,14 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext);
   const user: IUser = (appContext.ctx.req as any)?.user;
 
+  const componentProps = await appContext.Component.getInitialProps?.(
+    appContext.ctx,
+  );
+  console.log("[MyApp]", componentProps);
   appProps.pageProps = {
     isAuthenticated: user ? true : false,
     user,
+    ...componentProps,
   };
 
   return { ...appProps };
