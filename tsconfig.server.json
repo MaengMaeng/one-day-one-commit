@@ -4,7 +4,7 @@
     "module": "commonjs",
     "outDir": "dist",
     "noEmit": false,
-    "baseUrl": "."
+    "baseUrl": "./"
   },
 
   "include": ["server"]

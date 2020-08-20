@@ -46,10 +46,10 @@ const Header: React.FC<IProps> = ({
       <div className="user-info">
         {isAuthenticated ? (
           <div className="logged">
-            <a href={`https://github.com/${user.username}`} target="blank">
-              {user.username}
+            <a href={`https://github.com/${user?.username}`} target="blank">
+              {user?.username}
             </a>
-            <img src={user.avatarUrl} alt={user.username} />
+            <img src={user?.avatarUrl} alt={user?.username} />
             <Link href="/logout">
               <a>로그아웃</a>
             </Link>

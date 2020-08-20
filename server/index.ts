@@ -1,14 +1,16 @@
-import globalRouter from "./routers/gloablRouter";
 import next from "next";
 import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import "./db";
-import "./passport";
 
 import dotenv from "dotenv";
 import passport from "passport";
+import routes from "./routes";
+import globalRouter from "./routers/gloablRouter";
+import apiRouter from "./routers/apiRouter";
+import "./db";
+import "./passport";
 
 dotenv.config();
 
@@ -40,6 +42,7 @@ app
     server.use(passport.session());
 
     server.use(globalRouter);
+    server.use(routes.api, apiRouter);
 
     server.get("*", (req, res) => {
       return handle(req, res);
