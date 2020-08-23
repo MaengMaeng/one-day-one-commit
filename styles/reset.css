@@ -132,11 +132,17 @@ table {
   box-sizing: border-box;
 }
 
-a {
+a,
+button {
   all: unset;
+  color: black;
   cursor: pointer;
+  box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.1),
+    0 5px 5px -5px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
 }
 
-a:hover {
-  color: blue;
+a:hover,
+button:hover {
+  transform: translateY(-2px);
 }

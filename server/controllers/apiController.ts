@@ -15,7 +15,7 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 2,
-    commitDays: 99,
+    commitDays: 95,
   },
   {
     username: "noel",
@@ -23,7 +23,7 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 3,
-    commitDays: 98,
+    commitDays: 90,
   },
   {
     username: "max",
@@ -31,7 +31,7 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 4,
-    commitDays: 97,
+    commitDays: 85,
   },
   {
     username: "tom",
@@ -39,7 +39,7 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 5,
-    commitDays: 96,
+    commitDays: 80,
   },
   {
     username: "woo",
@@ -47,7 +47,7 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 6,
-    commitDays: 96,
+    commitDays: 75,
   },
   {
     username: "ella",
@@ -55,7 +55,7 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 7,
-    commitDays: 95,
+    commitDays: 70,
   },
   {
     username: "queen",
@@ -63,7 +63,7 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 8,
-    commitDays: 94,
+    commitDays: 65,
   },
   {
     username: "anna",
@@ -71,7 +71,7 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 9,
-    commitDays: 93,
+    commitDays: 60,
   },
   {
     username: "bill",
@@ -79,11 +79,11 @@ const mockupData: Partial<IUser>[] = [
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
     rank: 10,
-    commitDays: 92,
+    commitDays: 55,
   },
 ];
 
-const gap = 3;
+const gap = 5;
 
 export const getRanks = (req: any, res: any) => {
   const {

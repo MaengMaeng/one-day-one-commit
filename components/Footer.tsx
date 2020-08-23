@@ -32,7 +32,7 @@ const FooterContainer = styled.footer`
   align-items: center;
   padding: 10px;
   background-color: ${({ theme }) => theme.colors.bg};
-
+  z-index: 2;
   .developers {
     display: flex;
     align-items: center;

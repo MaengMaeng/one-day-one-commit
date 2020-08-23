@@ -46,13 +46,15 @@ const Header: React.FC<IProps> = ({
       <div className="user-info">
         {isAuthenticated ? (
           <div className="logged">
-            <a href={`https://github.com/${user?.username}`} target="blank">
-              {user?.username}
-            </a>
             <img src={user?.avatarUrl} alt={user?.username} />
-            <Link href="/logout">
-              <a>로그아웃</a>
-            </Link>
+            <div className="links">
+              <a href={`https://github.com/${user?.username}`} target="blank">
+                {user?.username}
+              </a>
+              <Link href="/logout">
+                <a>로그아웃</a>
+              </Link>
+            </div>
           </div>
         ) : (
           <Link href="/auth">
@@ -70,33 +72,66 @@ const HeaderContainer = styled.header`
   top: 0;
   width: 100%;
   background-color: ${({ theme }) => theme.colors.bg};
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   justify-content: space-between;
   align-items: center;
   padding: 10px;
   font-size: 18px;
+  z-index: 2;
 
   .user-info {
-    a {
+    justify-self: flex-end;
+    & > a {
+      display: block;
       border-radius: 5px;
       padding: 5px 10px;
       background-color: ${({ theme }) => theme.colors.btn};
-      color: black;
-      transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-      &:hover {
-        background-color: ${({ theme }) => theme.colors.btn_hover};
-      }
     }
     .logged {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
+      position: relative;
 
       img {
         border-radius: 15px;
-        width: 20px;
-        height: 20px;
+        width: 25dpx;
+        height: 25px;
+      }
+
+      .links {
+        padding: 10px 0px;
+        right: 0px;
+        top: 30px;
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #e1e4e8;
+        border-radius: 6px;
+        box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+        font-size: 14px;
+
+        &::after {
+          border-left: 10px solid transparent;
+          border-right: 10px solid transparent;
+          border-bottom: 10px solid #fff;
+          content: "";
+          position: absolute;
+          top: -5px;
+          right: 0px;
+        }
+        a {
+          padding: 5px 20px;
+          box-shadow: none;
+        }
+        a:hover {
+          background-color: #2ecc71;
+        }
+      }
+
+      &:hover .links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
       }
     }
   }
