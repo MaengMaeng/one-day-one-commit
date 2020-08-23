@@ -33,7 +33,7 @@ const Rank: React.FC<IProps> = ({ info }) => {
         <div className="commit-days">+{info.commitDays}</div>
         <CommitProgress percent={percent} />
       </a>
-      <Pointer isMe={true}>Me!!</Pointer>
+      <Pointer isMe={false}>Me!!</Pointer>
     </RankContainer>
   );
 };

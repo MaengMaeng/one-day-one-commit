@@ -1,9 +1,11 @@
 import * as React from "react";
 import styled from "styled-components";
 import Rank from "./Rank";
+
 interface IProps {
   ranks: any[];
 }
+
 export interface IRank {
   username: string;
   email: string;
