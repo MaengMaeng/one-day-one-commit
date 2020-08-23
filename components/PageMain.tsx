@@ -13,13 +13,10 @@ export interface IRank {
 }
 
 const PageMain: React.FC<IProps> = ({ ranks }) => {
-  return (
-    <MainContainer>
-      {ranks.map((rank) => (
-        <Rank key={rank.username + "-key"} info={rank} />
-      ))}
-    </MainContainer>
-  );
+  const rankList = ranks.map((rank) => (
+    <Rank key={rank.username + "-key"} info={rank} />
+  ));
+  return <MainContainer>{rankList}</MainContainer>;
 };
 
 const MainContainer = styled.main`
