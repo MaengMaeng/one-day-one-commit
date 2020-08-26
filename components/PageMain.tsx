@@ -1,9 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
 import Rank from "./Rank";
-
+import Axios from "axios";
+import { debounce } from "lodash";
 interface IProps {
-  ranks: any[];
+  ranks: IRank[];
 }
 
 export interface IRank {
@@ -15,12 +16,36 @@ export interface IRank {
 }
 
 const PageMain: React.FC<IProps> = ({ ranks }) => {
-  const rankList = ranks.map((rank) => (
-    <Rank key={rank.username + "-key"} info={rank} />
-  ));
+  const [loading, setLoading] = React.useState(false);
+  const [rankArr, setRankArr] = React.useState(ranks);
 
+  const rankList = React.useMemo(
+    () =>
+      rankArr.map((rank) => <Rank key={rank.username + "-key"} info={rank} />),
+    [rankArr],
+  );
+
+  const onScroll = debounce(async () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      if (!loading) {
+        setLoading(true);
+        const ranks = await Axios.get("http://localhost:3000/api/ranks?next=2");
+        const ranksData = ranks.status === 200 ? ranks.data : [];
+        setRankArr((p) => p.concat(...ranksData));
+        setLoading(false);
+      }
+    }
+  }, 500);
+
+  React.useEffect(() => {
+    document.addEventListener("scroll", onScroll);
+
+    return () => {
+      document.removeEventListener("scroll", onScroll);
+    };
+  }, []);
   return (
-    <MainContainer>
+    <MainContainer onScroll={onScroll}>
       <div className="rank-list">{rankList}</div>
       <div className="update-info">
         <button className="btn-update">
@@ -28,13 +53,14 @@ const PageMain: React.FC<IProps> = ({ ranks }) => {
         </button>
         <span>Updated at 17:47</span>
       </div>
+      <Loading loading={loading ? 1 : 0}>Loading...</Loading>
     </MainContainer>
   );
 };
 
-const MainContainer = styled.main`
+const MainContainer = styled.div`
   position: relative;
-  margin: 60px 0;
+  padding: 60px 0;
   background-color: white;
   z-index: 1;
 
@@ -43,6 +69,7 @@ const MainContainer = styled.main`
     flex-direction: column;
     gap: 20px;
     align-items: center;
+    height: 100%;
   }
 
   .update-info {
@@ -69,6 +96,12 @@ const MainContainer = styled.main`
       border-radius: 10px;
     }
   }
+`;
+
+const Loading = styled.div<{ loading: number }>`
+  opacity: ${(p) => p.loading};
+  font-size: 20px;
+  font-weight: 600;
 `;
 
 export default PageMain;

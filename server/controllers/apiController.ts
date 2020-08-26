@@ -2,7 +2,7 @@ import { IUser } from "../models/User";
 
 const mockupData: Partial<IUser>[] = [
   {
-    username: "max",
+    username: "peter",
     email: "max@test.io",
     avatarUrl:
       "https://avatars0.githubusercontent.com/u/37009133?s=400&u=3998f5edfd907a527fbd8cac4d532026e91ae734&v=4",
