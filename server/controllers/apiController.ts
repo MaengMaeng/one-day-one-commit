@@ -93,7 +93,10 @@ export const getRanks = (req: any, res: any) => {
   if (next) {
     // get List from DB
     const ranks = mockupData.slice(gap * (next - 1), gap * next);
-    return res.json(ranks);
+    return res.json({
+      ranks,
+      isEnd: mockupData.length <= gap * next,
+    });
   }
 
   return res.status(400).send("Bad Request");

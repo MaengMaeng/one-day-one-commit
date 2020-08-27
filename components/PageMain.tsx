@@ -1,10 +1,24 @@
 import * as React from "react";
 import styled from "styled-components";
 import Rank from "./Rank";
-import Axios from "axios";
-import { debounce } from "lodash";
+import Axios, { AxiosResponse } from "axios";
+import { debounce, delay } from "lodash";
+
+enum STATUS {
+  NORMAL,
+  LOADING,
+  ERROR,
+  END,
+}
+
 interface IProps {
   ranks: IRank[];
+  isEnd: boolean;
+}
+
+interface IStatus {
+  statusNo: STATUS;
+  detail: string;
 }
 
 export interface IRank {
@@ -15,9 +29,13 @@ export interface IRank {
   commitDays: number;
 }
 
-const PageMain: React.FC<IProps> = ({ ranks }) => {
-  const [loading, setLoading] = React.useState(false);
+const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
+  const [status, setStatus] = React.useState<IStatus>({
+    statusNo: isEnd ? STATUS.END : STATUS.NORMAL,
+    detail: "",
+  });
   const [rankArr, setRankArr] = React.useState(ranks);
+  const page = React.useRef(1);
 
   const rankList = React.useMemo(
     () =>
@@ -25,27 +43,50 @@ const PageMain: React.FC<IProps> = ({ ranks }) => {
     [rankArr],
   );
 
-  const onScroll = debounce(async () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-      if (!loading) {
-        setLoading(true);
-        const ranks = await Axios.get("http://localhost:3000/api/ranks?next=2");
-        const ranksData = ranks.status === 200 ? ranks.data : [];
-        setRankArr((p) => p.concat(...ranksData));
-        setLoading(false);
-      }
-    }
-  }, 500);
-
   React.useEffect(() => {
+    const onScroll = debounce(async () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        if (status.statusNo === STATUS.NORMAL) {
+          try {
+            setStatus({ statusNo: STATUS.LOADING, detail: "Loading..." });
+            const res: AxiosResponse<{
+              ranks: IRank[];
+              isEnd: boolean;
+            }> = await Axios.get(
+              `http://localhost:3000/api/ranks?next=${page.current + 1}`,
+            );
+
+            if (res.status !== 200) {
+              throw Error("Error on server");
+            }
+
+            delay(() => {
+              page.current += 1;
+              setRankArr((p) => p.concat(...res.data.ranks));
+              setStatus({
+                statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
+                detail: "",
+              });
+            }, 2000);
+          } catch (err) {
+            setStatus({
+              statusNo: STATUS.ERROR,
+              detail: err,
+            });
+          }
+        }
+      }
+    }, 1000);
+
     document.addEventListener("scroll", onScroll);
 
     return () => {
       document.removeEventListener("scroll", onScroll);
     };
   }, []);
+
   return (
-    <MainContainer onScroll={onScroll}>
+    <MainContainer>
       <div className="rank-list">{rankList}</div>
       <div className="update-info">
         <button className="btn-update">
@@ -53,7 +94,7 @@ const PageMain: React.FC<IProps> = ({ ranks }) => {
         </button>
         <span>Updated at 17:47</span>
       </div>
-      <Loading loading={loading ? 1 : 0}>Loading...</Loading>
+      <StatusBar status={status.statusNo}>{status.detail}</StatusBar>
     </MainContainer>
   );
 };
@@ -98,10 +139,35 @@ const MainContainer = styled.div`
   }
 `;
 
-const Loading = styled.div<{ loading: number }>`
-  opacity: ${(p) => p.loading};
+const StatusBar = styled.div<{ status: STATUS }>`
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0px;
+  left: 0px;
+  z-index: 2;
   font-size: 20px;
   font-weight: 600;
+  background-color: ${(p) => {
+    switch (p.status) {
+      case STATUS.LOADING:
+      case STATUS.ERROR:
+        return "rgba(0, 0, 0, 0.1)";
+      default:
+        return "white";
+    }
+  }};
+  display: ${(p) => {
+    switch (p.status) {
+      case STATUS.LOADING:
+      case STATUS.ERROR:
+        return "flex";
+      default:
+        return "none";
+    }
+  }};
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s ease-in-out;
 `;
-
 export default PageMain;
