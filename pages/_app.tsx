@@ -50,7 +50,7 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   const componentProps = await appContext.Component.getInitialProps?.(
     appContext.ctx,
   );
-  console.log("[MyApp]", componentProps);
+  // console.log("[MyApp]", componentProps);
   appProps.pageProps = {
     isAuthenticated: user ? true : false,
     user,

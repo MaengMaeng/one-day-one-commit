@@ -1,9 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
 import Rank from "./Rank";
+import axios from "axios";
+
 interface IProps {
   ranks: any[];
 }
+
 export interface IRank {
   username: string;
   email: string;
@@ -13,9 +16,20 @@ export interface IRank {
 }
 
 const PageMain: React.FC<IProps> = ({ ranks }) => {
+  const [userRanks, setUserRanks] = React.useState(ranks);
+
+  const update = async() => {
+    const ranks = await axios.get("http://localhost:3000/api/update?next=1").then((ranks) => {
+      const ranksData = ranks.status === 200 ? ranks.data : [];
+      console.log(ranksData);
+      setUserRanks(ranksData);
+    });
+  }
+
   return (
     <MainContainer>
-      {ranks.map((rank) => (
+      <button onClick={update}>update</button>
+      {userRanks.map((rank) => (
         <Rank key={rank.username + "-key"} info={rank} />
       ))}
     </MainContainer>

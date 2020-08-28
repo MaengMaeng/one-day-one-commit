@@ -10,10 +10,10 @@ interface IProps extends IDefaultProps {
 }
 
 const Index: NextPage<IProps> = ({ isAuthenticated, user, ranksData }) => {
-  console.log(ranksData);
+  // console.log(ranksData);
   return (
     <BasicLayout isAuthenticated={isAuthenticated} user={user}>
-      <PageMain ranks={ranksData} />
+      <PageMain ranks={ranksData}/>
     </BasicLayout>
   );
 };
@@ -22,7 +22,6 @@ Index.getInitialProps = async (ctx: NextPageContext) => {
   const ranks = await axios.get("http://localhost:3000/api/ranks?next=1");
   const ranksData = ranks.status === 200 ? ranks.data : [];
 
-  console.log(">>><<<", ranksData);
   return { ranksData };
 };
 export default Index;
