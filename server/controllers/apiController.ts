@@ -105,7 +105,7 @@ export const getRanks = async(req: any, res: any) => {
 };
 
 const getRanksToArray = async(next:number) => {
-  return await db.find({rank:{$gt:gap * (next - 1), $lte:gap * next}},{_id:0, username:1, email:1, avatarUrl:1, rank:1, commitDays:1});
+  return await db.find({rank:{$gt:gap * (next - 1), $lte:gap * next}},{_id:0, username:1, email:1, avatarUrl:1, rank:1, commitDays:1}).sort({rank:1});
 }
 
 export const getUpdateRanks = async(req: any, res: any) => {
