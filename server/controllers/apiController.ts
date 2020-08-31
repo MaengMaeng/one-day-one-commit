@@ -46,7 +46,7 @@ export const getUpdateRanks = async (req: any, res: any) => {
       try {
         const check = await checkToDoToday(today, user.username);
 
-        await updateDoneAndCommitDays(user._id, today, check);
+        if (check) await updateDoneAndCommitDays(user._id, today);
       } catch (error) {
         console.log("!Error on notUpdateUsers: ", error);
       }
@@ -126,11 +126,7 @@ const getNotUpdateUsersByDate = async (date: string) => {
   }
 };
 
-const updateDoneAndCommitDays = async (
-  _id: string,
-  date: string,
-  check: boolean,
-) => {
+const updateDoneAndCommitDays = async (_id: string, date: string) => {
   try {
     await User.updateOne(
       { _id, dailyRanks: { $elemMatch: { date, done: 0 } } },
