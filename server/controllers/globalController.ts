@@ -37,7 +37,7 @@ export const githubLoginCallback = async (
       user.avatarUrl = avatarUrl;
       user.githubId = id;
       user.save();
-      return cb(null, user);
+      return await cb(null, user);
     }
 
     const newUser = await User.create({
@@ -45,10 +45,11 @@ export const githubLoginCallback = async (
       avatarUrl,
       username,
       email,
+      commitDays:0
     });
 
-    return cb(null, newUser);
+    return await cb(null, newUser);
   } catch (error) {
-    return cb(error);
+    return await cb(error);
   }
 };

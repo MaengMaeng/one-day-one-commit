@@ -7,7 +7,9 @@ export interface IUser extends mongoose.Document {
   email: string;
   createdAt?: Date;
   rank?: number;
-  commitDays?: number;
+  commitDays: number;
+  dailyRanks?: object[];
+  
 }
 
 const UserSchema = new mongoose.Schema({
@@ -18,6 +20,7 @@ const UserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   rank: { type: Number, default: 0 },
   commitDays: { type: Number, default: 0 },
+  dailyRanks: { type: Array, default: []}
 });
 
 const model = mongoose.model<IUser>("User", UserSchema);

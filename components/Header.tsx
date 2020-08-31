@@ -1,7 +1,7 @@
 import * as React from "react";
 import Link from "next/link";
 import styled from "styled-components";
-import { getLeftTime } from "uilts/common";
+import { getLeftTime } from "utils/common";
 import { IDefaultProps } from "pages/_app";
 
 interface IProps extends IDefaultProps {

@@ -37,6 +37,16 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
   const [rankArr, setRankArr] = React.useState(ranks);
   const page = React.useRef(1);
 
+  const update = React.useCallback(async () => {
+    const ranks = await Axios.get(
+      "http://localhost:3000/api/update?next=1",
+    ).then((ranks) => {
+      const ranksData = ranks.status === 200 ? ranks.data : [];
+      console.log(ranksData);
+      setRankArr(ranksData);
+    });
+  }, []);
+
   const rankList = React.useMemo(
     () =>
       rankArr.map((rank) => <Rank key={rank.username + "-key"} info={rank} />),
