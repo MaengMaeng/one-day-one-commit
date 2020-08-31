@@ -45,6 +45,7 @@ export const githubLoginCallback = async (
       avatarUrl,
       username,
       email,
+      commitDays: 0,
     });
 
     return cb(null, newUser);

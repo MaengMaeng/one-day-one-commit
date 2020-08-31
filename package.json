@@ -8,6 +8,7 @@
     "start": "NODE_ENV=production ts-node --project tsconfig.server.json --files server/index.ts"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.160",
     "axios": "0.19.2",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
@@ -15,6 +16,7 @@
     "express": "4.17.1",
     "express-session": "^1.17.1",
     "helmet": "^4.1.0",
+    "lodash": "^4.17.20",
     "mongoose": "5.10.0",
     "morgan": "^1.10.0",
     "next": "9.5.1",

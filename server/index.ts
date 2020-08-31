@@ -24,7 +24,8 @@ app
     const server = express();
 
     const sessionConfig = {
-      secret: "LZCJQ4ARJ4T3mpUL0Lph6O4yWkwIEnxT",
+      // secret: "LZCJQ4ARJ4T3mpUL0Lph6O4yWkwIEnxT",
+      secret: process.env.GITHUB_CLIENT_SECRET,
       cookie: {
         maxAge: 86400 * 1000, // 24 hours in milliseconds
       },
