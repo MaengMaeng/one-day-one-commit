@@ -3,10 +3,12 @@ import styled from "styled-components";
 import Rank from "./Rank";
 import Axios, { AxiosResponse } from "axios";
 import { debounce, delay } from "lodash";
+import { UserContext } from "pages/_app";
 
 enum STATUS {
   NORMAL,
   LOADING,
+  UPDATE,
   ERROR,
   END,
 }
@@ -30,6 +32,7 @@ export interface IRank {
 }
 
 const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
+  const currentUser = React.useContext(UserContext);
   const [status, setStatus] = React.useState<IStatus>({
     statusNo: isEnd ? STATUS.END : STATUS.NORMAL,
     detail: "",
@@ -38,18 +41,47 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
   const page = React.useRef(1);
 
   const update = React.useCallback(async () => {
-    const ranks = await Axios.get(
-      "http://localhost:3000/api/update?next=1",
-    ).then((ranks) => {
-      const ranksData = ranks.status === 200 ? ranks.data : [];
-      console.log(ranksData);
-      setRankArr(ranksData);
-    });
+    setStatus({ statusNo: STATUS.UPDATE, detail: "Updating..." });
+    page.current = 1;
+    try {
+      const res: AxiosResponse<{
+        ranks: IRank[];
+        isEnd: boolean;
+      }> = await Axios.get(
+        `http://localhost:3000/api/update?next=${page.current}`,
+      );
+
+      if (res.status !== 200) {
+        throw Error("Error on server");
+      }
+
+      delay(() => {
+        if (!res.data.isEnd) {
+          page.current += 1;
+        }
+
+        setRankArr(res.data.ranks);
+        setStatus({
+          statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
+          detail: "",
+        });
+      }, 2000);
+    } catch (err) {
+      setStatus({
+        statusNo: STATUS.ERROR,
+        detail: err,
+      });
+    }
   }, []);
 
   const rankList = React.useMemo(
     () =>
-      rankArr.map((rank) => <Rank key={rank.username + "-key"} info={rank} />),
+      rankArr.map((rank) => {
+        const me =
+          currentUser.isAuthenticated &&
+          currentUser.user?.username === rank.username;
+        return <Rank key={rank.username + "-key"} info={rank} me={me} />;
+      }),
     [rankArr],
   );
 
@@ -71,7 +103,10 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
             }
 
             delay(() => {
-              page.current += 1;
+              if (!res.data.isEnd) {
+                page.current += 1;
+              }
+
               setRankArr((p) => p.concat(...res.data.ranks));
               setStatus({
                 statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
@@ -99,10 +134,10 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
     <MainContainer>
       <div className="rank-list">{rankList}</div>
       <div className="update-info">
-        <button className="btn-update">
+        <button className="btn-update" onClick={update}>
           <i className="fas fa-sync"></i>
         </button>
-        <span>Updated at 17:47</span>
+        {/* <span>Updated at 17:47</span> */}
       </div>
       <StatusBar status={status.statusNo}>{status.detail}</StatusBar>
     </MainContainer>
@@ -161,6 +196,7 @@ const StatusBar = styled.div<{ status: STATUS }>`
   background-color: ${(p) => {
     switch (p.status) {
       case STATUS.LOADING:
+      case STATUS.UPDATE:
       case STATUS.ERROR:
         return "rgba(0, 0, 0, 0.1)";
       default:
@@ -170,6 +206,8 @@ const StatusBar = styled.div<{ status: STATUS }>`
   display: ${(p) => {
     switch (p.status) {
       case STATUS.LOADING:
+      case STATUS.UPDATE:
+
       case STATUS.ERROR:
         return "flex";
       default:

@@ -4,9 +4,10 @@ import { IRank } from "./PageMain";
 
 interface IProps {
   info: IRank;
+  me: boolean;
 }
 
-const Rank: React.FC<IProps> = ({ info }) => {
+const Rank: React.FC<IProps> = ({ info, me = false }) => {
   const prize =
     info.rank === 1
       ? "gold"
@@ -17,7 +18,6 @@ const Rank: React.FC<IProps> = ({ info }) => {
       : "etc";
 
   const percent = 100 * (info.commitDays / 365);
-
   return (
     <RankContainer>
       <a
@@ -33,7 +33,9 @@ const Rank: React.FC<IProps> = ({ info }) => {
         <div className="commit-days">+{info.commitDays}</div>
         <CommitProgress percent={percent} />
       </a>
-      <Pointer isMe={false}>Me!!</Pointer>
+      <Pointer isMe={me}>
+        <i className="fas fa-long-arrow-alt-right"></i>
+      </Pointer>
     </RankContainer>
   );
 };
@@ -112,6 +114,7 @@ const Pointer = styled.div<{ isMe: boolean }>`
   display: ${(p) => (p.isMe ? "block" : "none")};
   position: absolute;
   left: -45px;
+  font-size: 24px;
 `;
 
 export default Rank;

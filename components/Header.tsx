@@ -2,19 +2,15 @@ import * as React from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import { getLeftTime } from "utils/common";
-import { IDefaultProps } from "pages/_app";
+import { UserContext } from "pages/_app";
 
 interface IProps extends IDefaultProps {
   today: Date;
   tomorrow: Date;
 }
 
-const Header: React.FC<IProps> = ({
-  isAuthenticated,
-  user,
-  today,
-  tomorrow,
-}) => {
+const Header: React.FC<IProps> = ({ today, tomorrow }) => {
+  const currentUser = React.useContext(UserContext);
   const [timeDiff, setTimeDiff] = React.useState(
     tomorrow.getTime() - today.getTime(),
   );
@@ -44,12 +40,18 @@ const Header: React.FC<IProps> = ({
         {typeof window !== "undefined" ? leftTimeStr : null}
       </div>
       <div className="user-info">
-        {isAuthenticated ? (
+        {currentUser.isAuthenticated ? (
           <div className="logged">
-            <img src={user?.avatarUrl} alt={user?.username} />
+            <img
+              src={currentUser.user?.avatarUrl}
+              alt={currentUser.user?.username}
+            />
             <div className="links">
-              <a href={`https://github.com/${user?.username}`} target="blank">
-                {user?.username}
+              <a
+                href={`https://github.com/${currentUser.user?.username}`}
+                target="blank"
+              >
+                {currentUser.user?.username}
               </a>
               <Link href="/logout">
                 <a>로그아웃</a>

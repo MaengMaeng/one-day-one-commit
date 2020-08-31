@@ -4,8 +4,8 @@ import App, { AppProps, AppContext } from "next/app";
 import "styles/reset.css";
 import { ThemeProvider } from "styled-components";
 
-export interface IDefaultProps {
-  isAuthenticated?: boolean;
+interface IUserContext {
+  isAuthenticated: boolean;
   user?: IUser;
 }
 
@@ -13,6 +13,7 @@ interface IUser {
   username: string;
   email: string;
   avatarUrl: string;
+  rank: number;
 }
 
 const themes = {
@@ -30,14 +31,26 @@ const themes = {
   },
 };
 
+export const UserContext = React.createContext<IUserContext>({
+  isAuthenticated: false,
+  user: undefined,
+});
+
 function MyApp({ Component, pageProps }: AppProps) {
+  const currentUser: IUserContext = {
+    isAuthenticated: pageProps.isAuthenticated ?? false,
+    user: pageProps.user ?? undefined,
+  };
+
   return (
     <>
       <Head>
         <title>ODOC👌</title>
       </Head>
       <ThemeProvider theme={themes.light}>
-        <Component {...pageProps} />
+        <UserContext.Provider value={currentUser}>
+          <Component {...pageProps} />
+        </UserContext.Provider>
       </ThemeProvider>
     </>
   );
