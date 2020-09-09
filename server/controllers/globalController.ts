@@ -29,7 +29,7 @@ export const githubLoginCallback = async (
   } = profile._json as any;
 
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ githubId: id });
 
     if (user) {
       console.log("Already registered");

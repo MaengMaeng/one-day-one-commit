@@ -13,10 +13,10 @@ passport.use(
   ),
 );
 
-passport.serializeUser((user: IUser, done) => done(null, user.email));
-passport.deserializeUser(async (email, done) => {
+passport.serializeUser((user: IUser, done) => done(null, user.githubId));
+passport.deserializeUser(async (githubId, done) => {
   try {
-    const user = await User.findOne({ email: email as string });
+    const user = await User.findOne({ githubId: githubId as number });
 
     if (user) {
       return done(null, {
