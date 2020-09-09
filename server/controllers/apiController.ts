@@ -1,8 +1,14 @@
 import User, { IUser } from "../models/User";
 import axios from "axios";
-import { getTodayDateStr } from "../common";
+import { getDateStr } from "../common";
+import * as CONSTANTS from '../constants';
 
-const gap = 20;
+setInterval(async () => {
+  await updateRanks();
+  console.log('Update');
+}, CONSTANTS.UPDATE_TIME);
+
+let updateTimer:any = null;
 
 export const getRanks = async (req: any, res: any) => {
   const {
@@ -13,7 +19,7 @@ export const getRanks = async (req: any, res: any) => {
     const ranks = await getRanksToArray(next);
     res.json({
       ranks,
-      isEnd: ranks.length < gap,
+      isEnd: ranks.length < CONSTANTS.GAP,
     });
   } catch (error) {
     console.log("!Error on getRanks: ", error);
@@ -24,7 +30,7 @@ export const getRanks = async (req: any, res: any) => {
 const getRanksToArray = async (next: number) => {
   try {
     return await User.find(
-      { rank: { $gt: gap * (next - 1), $lte: gap * next } },
+      { rank: { $gt: CONSTANTS.GAP * (next - 1), $lte: CONSTANTS.GAP * next } },
       { _id: 0, username: 1, email: 1, avatarUrl: 1, rank: 1, commitDays: 1 },
     ).sort({ rank: 1 });
   } catch (error) {
@@ -38,38 +44,52 @@ export const getUpdateRanks = async (req: any, res: any) => {
   } = req;
 
   try {
-    const today = getTodayDateStr();
+    if(!updateTimer){
+      updateTimer = setTimeout(() => {
+        updateTimer = null;
+      },CONSTANTS.LIMIT_UPDATE_TIME);
 
-    const notUpdateUsers = await getNotUpdateUsersByDate(today);
-
-    notUpdateUsers.forEach(async (user) => {
-      try {
-        const check = await checkToDoToday(today, user.username);
-
-        if (check) await updateDoneAndCommitDays(user._id, today);
-      } catch (error) {
-        console.log("!Error on notUpdateUsers: ", error);
-      }
-    });
-
-    const users = await getUsers();
-    users.sort((a, b) => b.commitDays - a.commitDays);
-
-    users.forEach(async (user, index) => {
-      try {
-        await updateRank(user._id, today, index + 1);
-      } catch (error) {
-        console.log("!Error on uses: ", error);
-      }
-    });
-
-    const ranks = await getRanksToArray(next);
-    res.json({ ranks, isEnd: ranks.length < gap });
+      await updateRanks();
+  
+      const ranks = await getRanksToArray(next);
+      res.json({ ranks, isEnd: ranks.length < CONSTANTS.GAP });
+    }
+    else{
+      console.log('!Can Not Be Updated');
+      res.status(400).send("Can Not Be Updated");
+    }
   } catch (error) {
     console.log("!Error on getUpdateRanks: ", error);
     res.status(400).send("Bad Request");
   }
 };
+
+const updateRanks = async () => {
+  const today = getDateStr();
+
+  const notUpdateUsers = await getNotUpdateUsersByDate(today);
+
+  notUpdateUsers.forEach(async (user) => {
+    try {
+      const check = await checkToDoToday(today, user.username);
+
+      if (check) await updateDoneAndCommitDays(user._id, today);
+    } catch (error) {
+      console.log("!Error on notUpdateUsers: ", error);
+    }
+  });
+
+  const users = await getUsers();
+  users.sort((a, b) => b.commitDays - a.commitDays);
+
+  users.forEach(async (user, index) => {
+    try {
+      await updateRank(user._id, today, index + 1);
+    } catch (error) {
+      console.log("!Error on uses: ", error);
+    }
+  });
+}
 
 const checkToDoToday = async (date: string, username: string) => {
   try {
@@ -82,7 +102,7 @@ const checkToDoToday = async (date: string, username: string) => {
       (event: any) => listPR.indexOf(event["type"]) != -1,
     );
     const todayEvents = prEvents.filter(
-      (event: any) => event["created_at"].split("T")[0] == date,
+      (event: any) => getDateStr(new Date(event["created_at"])) == date,
     );
 
     return todayEvents.length > 0;
@@ -132,7 +152,7 @@ const updateDoneAndCommitDays = async (_id: string, date: string) => {
       { _id, dailyRanks: { $elemMatch: { date, done: 0 } } },
       { $set: { "dailyRanks.$.done": 1 } },
     );
-    await User.updateOne({ _id }, { $inc: { commitDays: check ? 1 : 0 } });
+    await User.updateOne({ _id }, { $inc: { commitDays: 1} });
   } catch (error) {
     console.log("Error on updateDoneAndCommitDays: ", error);
   }
