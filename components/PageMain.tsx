@@ -48,9 +48,7 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
         ranks: IRank[];
         isEnd: boolean;
         leftTime: number;
-      }> = await Axios.get(
-        `http://localhost:3000/api/update?next=${page.current}`,
-      );
+      }> = await Axios.get(`/api/update?next=${page.current}`);
 
       if (res.status !== 200) {
         throw Error("Error on server");
@@ -67,17 +65,15 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
         return;
       }
 
-      delay(() => {
-        if (!res.data.isEnd) {
-          page.current += 1;
-        }
+      if (!res.data.isEnd) {
+        page.current += 1;
+      }
 
-        setRankArr(res.data.ranks);
-        setStatus({
-          statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
-          detail: "",
-        });
-      }, 2000);
+      setRankArr(res.data.ranks);
+      setStatus({
+        statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
+        detail: "",
+      });
     } catch (err) {
       setStatus({
         statusNo: STATUS.ERROR,
@@ -106,25 +102,21 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
             const res: AxiosResponse<{
               ranks: IRank[];
               isEnd: boolean;
-            }> = await Axios.get(
-              `http://localhost:3000/api/ranks?next=${page.current + 1}`,
-            );
+            }> = await Axios.get(`api/ranks?next=${page.current + 1}`);
 
             if (res.status !== 200) {
               throw Error("Error on server");
             }
 
-            delay(() => {
-              if (!res.data.isEnd) {
-                page.current += 1;
-              }
+            if (!res.data.isEnd) {
+              page.current += 1;
+            }
 
-              setRankArr((p) => p.concat(...res.data.ranks));
-              setStatus({
-                statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
-                detail: "",
-              });
-            }, 2000);
+            setRankArr((p) => p.concat(...res.data.ranks));
+            setStatus({
+              statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
+              detail: "",
+            });
           } catch (err) {
             setStatus({
               statusNo: STATUS.ERROR,
@@ -149,7 +141,6 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
         <button className="btn-update" onClick={update}>
           <i className="fas fa-sync"></i>
         </button>
-        {/* <span>Updated at 17:47</span> */}
       </div>
       <StatusBar status={status.statusNo}>{status.detail}</StatusBar>
     </MainContainer>

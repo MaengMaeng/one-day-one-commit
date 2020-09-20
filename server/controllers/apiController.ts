@@ -101,13 +101,12 @@ const updateRanks = async () => {
 
 const checkToDoToday = async (date: string, username: string) => {
   try {
-    const url = `https://urlreq.appspot.com/req?method=GET&url=https://api.github.com/users/${username}/events`;
+    const url = `https://api.github.com/users/${username}/events`;
     const data = await axios.get(url);
-
     const listPR = ["PullRequestEvent", "PushEvent"];
 
     const prEvents = data["data"].filter(
-      (event: any) => listPR.indexOf(event["type"]) != -1,
+      (event: any) => listPR.indexOf(event["type"]) !== -1,
     );
     const todayEvents = prEvents.filter(
       (event: any) => getDateStr(new Date(event["created_at"])) == date,
@@ -160,7 +159,7 @@ const updateDoneAndCommitDays = async (_id: string, date: string) => {
       { _id, dailyRanks: { $elemMatch: { date, done: 0 } } },
       { $set: { "dailyRanks.$.done": 1 } },
     );
-    await User.updateOne({ _id }, { $inc: { commitDays: 1} });
+    await User.updateOne({ _id }, { $inc: { commitDays: 1 } });
   } catch (error) {
     console.log("Error on updateDoneAndCommitDays: ", error);
   }
