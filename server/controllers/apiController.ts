@@ -9,6 +9,8 @@ setInterval(async () => {
 }, CONSTANTS.UPDATE_TIME);
 
 let updateTimer:any = null;
+let leftTimer:any = null;
+let leftTime = CONSTANTS.LIMIT_UPDATE_TIME/1000;
 
 export const getRanks = async (req: any, res: any) => {
   const {
@@ -45,8 +47,14 @@ export const getUpdateRanks = async (req: any, res: any) => {
 
   try {
     if(!updateTimer){
+      leftTimer = setInterval(() => {
+        leftTime--;
+      }, CONSTANTS.ONE_SECOND);
+
       updateTimer = setTimeout(() => {
         updateTimer = null;
+        clearInterval(leftTimer);
+        leftTime = CONSTANTS.LIMIT_UPDATE_TIME/1000;
       },CONSTANTS.LIMIT_UPDATE_TIME);
 
       await updateRanks();
@@ -56,7 +64,7 @@ export const getUpdateRanks = async (req: any, res: any) => {
     }
     else{
       console.log('!Can Not Be Updated');
-      res.status(400).send("Can Not Be Updated");
+      res.json({leftTime});
     }
   } catch (error) {
     console.log("!Error on getUpdateRanks: ", error);

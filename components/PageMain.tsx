@@ -47,12 +47,24 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
       const res: AxiosResponse<{
         ranks: IRank[];
         isEnd: boolean;
+        leftTime: number;
       }> = await Axios.get(
         `http://localhost:3000/api/update?next=${page.current}`,
       );
 
       if (res.status !== 200) {
         throw Error("Error on server");
+      }
+
+      if (res.data.leftTime){
+        console.log(res.data.leftTime)
+        
+        setStatus({
+          statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
+          detail: "",
+        });
+
+        return;
       }
 
       delay(() => {
