@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { getLeftTime } from "utils/common";
 import { UserContext } from "pages/_app";
 
-interface IProps extends IDefaultProps {
+interface IProps {
   today: Date;
   tomorrow: Date;
 }

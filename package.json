@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "NODE_ENV=development ts-node --project tsconfig.server.json --files server/index.ts",
-    "build": "next build",
-    "start": "NODE_ENV=production ts-node --project tsconfig.server.json --files server/index.ts"
+    "build": "next build && npm run build:server",
+    "build:server": "rimraf ./dist && tsc -p tsconfig.server.json",
+    "prestart": "npm run build",
+    "start": "NODE_ENV=production node dist/index.js"
   },
   "dependencies": {
     "@types/lodash": "^4.14.160",
@@ -23,7 +25,8 @@
     "passport": "^0.4.1",
     "passport-github": "^1.1.0",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
