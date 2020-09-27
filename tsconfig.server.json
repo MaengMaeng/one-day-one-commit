@@ -6,6 +6,5 @@
     "noEmit": false,
     "baseUrl": "./"
   },
-
-  "include": ["server"]
+  "include": ["./server/**/*"]
 }

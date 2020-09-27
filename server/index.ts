@@ -15,6 +15,8 @@ import "./passport";
 dotenv.config();
 
 const dev = process.env.NODE_ENV !== "production";
+const port = process.env.PORT;
+
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
@@ -24,7 +26,6 @@ app
     const server = express();
 
     const sessionConfig = {
-      // secret: "LZCJQ4ARJ4T3mpUL0Lph6O4yWkwIEnxT",
       secret: process.env.GITHUB_CLIENT_SECRET,
       cookie: {
         maxAge: 86400 * 1000, // 24 hours in milliseconds
@@ -49,9 +50,9 @@ app
       return handle(req, res);
     });
 
-    server.listen(3000, (e) => {
+    server.listen(port, (e) => {
       if (e) throw e;
-      console.log("> Reday on http://localhost:3000");
+      console.log(`> Reday on http://localhost:${port}`);
     });
   })
   .catch((e) => {

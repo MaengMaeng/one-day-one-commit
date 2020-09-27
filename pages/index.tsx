@@ -1,6 +1,5 @@
 import BasicLayout from "components/BasicLayout";
 import PageMain, { IRank } from "components/PageMain";
-import { IDefaultProps } from "./_app";
 import { NextPage, NextPageContext } from "next";
 import axios, { AxiosResponse } from "axios";
 
