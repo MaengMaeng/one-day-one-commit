@@ -1,16 +1,16 @@
 import User, { IUser } from "../models/User";
 import axios from "axios";
 import { getDateStr } from "../common";
-import * as CONSTANTS from '../constants';
+import * as CONSTANTS from "../constants";
 
 setInterval(async () => {
   await updateRanks();
-  console.log('Update');
+  console.log("Update");
 }, CONSTANTS.UPDATE_TIME);
 
-let updateTimer:any = null;
-let leftTimer:any = null;
-let leftTime = CONSTANTS.LIMIT_UPDATE_TIME/1000;
+let updateTimer: any = null;
+let leftTimer: any = null;
+let leftTime = CONSTANTS.LIMIT_UPDATE_TIME / 1000;
 
 export const getRanks = async (req: any, res: any) => {
   const {
@@ -46,7 +46,7 @@ export const getUpdateRanks = async (req: any, res: any) => {
   } = req;
 
   try {
-    if(!updateTimer){
+    if (!updateTimer) {
       leftTimer = setInterval(() => {
         leftTime--;
       }, CONSTANTS.ONE_SECOND);
@@ -54,17 +54,16 @@ export const getUpdateRanks = async (req: any, res: any) => {
       updateTimer = setTimeout(() => {
         updateTimer = null;
         clearInterval(leftTimer);
-        leftTime = CONSTANTS.LIMIT_UPDATE_TIME/1000;
-      },CONSTANTS.LIMIT_UPDATE_TIME);
+        leftTime = CONSTANTS.LIMIT_UPDATE_TIME / 1000;
+      }, CONSTANTS.LIMIT_UPDATE_TIME);
 
       await updateRanks();
-  
+
       const ranks = await getRanksToArray(next);
-      res.json({ ranks, isEnd: ranks.length < CONSTANTS.GAP });
-    }
-    else{
-      console.log('!Can Not Be Updated');
-      res.json({leftTime});
+      res.json({ ranks, isEnd: ranks.length < CONSTANTS.GAP, leftTime });
+    } else {
+      console.log("!Can Not Be Updated");
+      res.json({ leftTime: leftTime < 0 ? 0 : leftTime });
     }
   } catch (error) {
     console.log("!Error on getUpdateRanks: ", error);
@@ -97,7 +96,7 @@ const updateRanks = async () => {
       console.log("!Error on uses: ", error);
     }
   });
-}
+};
 
 const checkToDoToday = async (date: string, username: string) => {
   try {

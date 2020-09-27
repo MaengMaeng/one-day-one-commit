@@ -82,6 +82,10 @@ const HeaderContainer = styled.header`
   font-size: 18px;
   z-index: 2;
 
+  .left-time {
+    text-align: center;
+  }
+
   .user-info {
     justify-self: flex-end;
     & > a {

@@ -4,6 +4,7 @@ import Rank from "./Rank";
 import Axios, { AxiosResponse } from "axios";
 import { debounce, delay } from "lodash";
 import { UserContext } from "pages/_app";
+import { getLeftTime } from "utils/common";
 
 enum STATUS {
   NORMAL,
@@ -39,41 +40,44 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
   });
   const [rankArr, setRankArr] = React.useState(ranks);
   const page = React.useRef(1);
+  const leftTimeSpan = React.useRef<HTMLSpanElement>(null);
 
   const update = React.useCallback(async () => {
+    const prevStatus = status;
     setStatus({ statusNo: STATUS.UPDATE, detail: "Updating..." });
     page.current = 1;
     try {
       const res: AxiosResponse<{
-        ranks: IRank[];
-        isEnd: boolean;
-        leftTime: number;
+        ranks?: IRank[];
+        isEnd?: boolean;
+        leftTime?: number;
       }> = await Axios.get(`/api/update?next=${page.current}`);
 
       if (res.status !== 200) {
         throw Error("Error on server");
       }
 
-      if (res.data.leftTime){
-        console.log(res.data.leftTime)
-        
+      if (leftTimeSpan.current) {
+        const { minutesStr, secondsStr } = getLeftTime(
+          (res.data.leftTime ?? 0) * 1000,
+        );
+        leftTimeSpan.current.innerText = `Left ${minutesStr}m ${secondsStr}s`;
+      }
+
+      if (res.data.ranks) {
+        if (!res.data.isEnd) {
+          page.current += 1;
+        }
+
+        setRankArr(res.data.ranks);
+
         setStatus({
           statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
           detail: "",
         });
-
-        return;
+      } else {
+        setStatus({ statusNo: prevStatus.statusNo, detail: prevStatus.detail });
       }
-
-      if (!res.data.isEnd) {
-        page.current += 1;
-      }
-
-      setRankArr(res.data.ranks);
-      setStatus({
-        statusNo: res.data.isEnd ? STATUS.END : STATUS.NORMAL,
-        detail: "",
-      });
     } catch (err) {
       setStatus({
         statusNo: STATUS.ERROR,
@@ -141,6 +145,7 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
         <button className="btn-update" onClick={update}>
           <i className="fas fa-sync"></i>
         </button>
+        <span ref={leftTimeSpan}></span>
       </div>
       <StatusBar status={status.statusNo}>{status.detail}</StatusBar>
     </MainContainer>
