@@ -7,7 +7,10 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/callback",
+      callbackURL:
+        process.env.NODE_ENV === "production"
+          ? "https://odoc.herokuapp.com/auth/callback"
+          : `http://localhost:${process.env.PORT}/auth/callback`,
     },
     githubLoginCallback,
   ),

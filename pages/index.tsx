@@ -21,7 +21,8 @@ Index.getInitialProps = async (ctx: NextPageContext) => {
   const res: AxiosResponse<{
     ranks: IRank[];
     isEnd: boolean;
-  }> = await axios.get("http://localhost:3000/api/ranks?next=1");
+  }> = await axios.get(`http://localhost:${process.env.PORT}/api/ranks?next=1`);
+
   const ranksData = res.data;
 
   return { ...ranksData };

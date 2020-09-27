@@ -106,7 +106,7 @@ const PageMain: React.FC<IProps> = ({ ranks, isEnd }) => {
             const res: AxiosResponse<{
               ranks: IRank[];
               isEnd: boolean;
-            }> = await Axios.get(`api/ranks?next=${page.current + 1}`);
+            }> = await Axios.get(`/api/ranks?next=${page.current + 1}`);
 
             if (res.status !== 200) {
               throw Error("Error on server");
