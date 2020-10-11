@@ -136,7 +136,7 @@ const HeaderContainer = styled.header`
       &:hover .links {
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
+        align-items: stretch;
         justify-content: center;
       }
     }
